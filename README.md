@@ -1,3 +1,5 @@
+This is a folk from https://github.com/traveler20/gulp-starter  
+
 # gulp-starter
 
 gulp で FLOCSS × Dart Sass のコーディングをするためのスターターキット。
