@@ -10,7 +10,12 @@ Git のリポジトリをコピー後、ターミナルで以下のコマンド�
 
 `npm install`
 
-`npx gulp`
+## 作業を開始する
+
+`npm run dev` or `yarn dev`
+`npm run tailwind` or `yarn tailwind`
+
+tailwindは`docs`のファイルを見る
 
 http://localhost:3000/
 

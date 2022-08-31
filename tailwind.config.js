@@ -3,10 +3,11 @@ const defaultTheme = require('tailwindcss/defaultTheme')
 
 module.exports = {
   mode: "jit",
-  content: ['./src/**/*.{html,js,ejs}'],
+  content: ['./docs/**/*.{html,ejs}'],
   theme: {
     screens: {
       pc: '900px',
+      mpc: {'max': '1100px','min':'900px'},
       sp: {'max': '899px'},
       ...defaultTheme.screens,
     },
@@ -15,13 +16,6 @@ module.exports = {
       'serif' : ['Noto Serif JP'],
     },
     extend: {
-      colors: {
-        "daihen": '#0091D7',
-        "dark-blue": "#006ED7",
-      },
-      backgroundImage: {
-        "home-pickup": 'url(../images/home/pickup-bg.png)'
-      },
     },
   },
   plugins: [],

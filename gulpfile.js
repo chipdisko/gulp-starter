@@ -12,13 +12,14 @@ const prettier = require("gulp-prettier");
 const sass = require("gulp-dart-sass");
 const postcss = require('gulp-postcss')
 
-// css 縮小化
+// css
 const purgecss = require("gulp-purgecss");
 const cleancss = require("gulp-clean-css");
-// js 縮小化
+// js
 const uglify = require("gulp-uglify");
-// img 縮小化
+// img
 const imagemin = require("gulp-imagemin");
+const webp = require('gulp-webp');
 
 
 // エラーが発生しても強制終了させない
@@ -33,9 +34,11 @@ const srcBase = "./src";
 const docsBase = "./docs";
 
 const srcPath = {
-  scss: srcBase + "/asset/sass/**/*.scss",
+  scss: srcBase + "/asset/sass/**/*.sass",
   js: srcBase + "/asset/js/*.js",
-  img: srcBase + "/asset/img/**",
+  img: srcBase + "/asset/img/**/*.{jpg,jpeg,gif,png}",
+  svg: srcBase + "/asset/img/**/*.svg",
+  video: srcBase + "/asset/videos/**",
   html: srcBase + "/**/*.html",
   ejs: [srcBase + "/**/*.ejs", "!" + srcBase + "/**/_*.ejs"],
 };
@@ -44,6 +47,7 @@ const docsPath = {
   css: docsBase + "/asset/css/",
   js: docsBase + "/asset/js/",
   img: docsBase + "/asset/img/",
+  video: docsBase + "/asset/videos/",
   html: docsBase + "/",
   ejs: docsBase + "/",
 };
@@ -74,7 +78,7 @@ const cssSass = () => {
         })
       )
       // .pipe(csscomb()) // csscombでCSSの順序指定
-      .pipe(cleancss())
+      // .pipe(cleancss())
       .pipe(gulp.dest(docsPath.css, { sourcemaps: "./" })) //コンパイル先
       .pipe(browserSync.stream())
       .pipe(
@@ -115,14 +119,41 @@ const img = () => {
         errorHandler: notify.onError("Error:<%= error.message %>"),
       })
     )
+    .pipe(webp({
+      // オプションを追加
+      quality: 80,
+      method: 6,
+    }))
+    .pipe(gulp.dest(docsPath.img))
+    .pipe(browserSync.stream())
+    .pipe(
+      notify({
+        message: "webpを作成しました",
+        onLast: true,
+      })
+    );
+};
+/**
+ * svg
+ */
+const svg = () => {
+  return gulp
+    .src(srcPath.svg)
     .pipe(
       imagemin([
-        imagemin.svgo(),
-        imagemin.optipng(),
-        imagemin.gifsicle({ optimizationLevel: 3 }),
+        imagemin.svgo()
       ])
     )
     .pipe(gulp.dest(docsPath.img))
+    .pipe(browserSync.stream());
+};
+/**
+ * video
+ */
+const video = () => {
+  return gulp
+    .src(srcPath.video)
+    .pipe(gulp.dest(docsPath.video))
     .pipe(browserSync.stream());
 };
 
@@ -175,6 +206,8 @@ const watchFiles = () => {
   gulp.watch(srcPath.scss, gulp.series(cssSass));
   gulp.watch(srcPath.js, gulp.series(js));
   gulp.watch(srcPath.img, gulp.series(img));
+  gulp.watch(srcPath.svg, gulp.series(svg));
+  gulp.watch(srcPath.video, gulp.series(video));
   gulp.watch(srcPath.html, gulp.series(html, browserSyncReload));
   gulp.watch(srcPath.ejs, gulp.series(ejsHtml, browserSyncReload));
 };
@@ -184,6 +217,6 @@ const watchFiles = () => {
  * parallelは並列で実行
  */
 exports.default = gulp.series(
-  gulp.parallel(html, ejsHtml, img, js, cssSass),
+  gulp.parallel(html, ejsHtml, img, svg, video, js, cssSass),
   gulp.parallel(watchFiles, browserSyncFunc)
 );

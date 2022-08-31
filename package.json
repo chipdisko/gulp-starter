@@ -4,7 +4,8 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"css": "postcss src/asset/css/tailwind.css -o docs/asset/css/tailwind.css --watch",
+		"dev": "npx gulp",
+		"tailwind": "postcss src/asset/css/tailwind.css -o docs/asset/css/tailwind.css --watch",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"author": "chipdisko",
@@ -24,9 +25,10 @@
 		"gulp-rename": "^2.0.0",
 		"gulp-sass": "^5.0.0",
 		"gulp-uglify": "^3.0.2",
+		"gulp-webp": "^4.0.1",
 		"plumber": "^0.4.8",
 		"postcss": "^8.4.16",
-    "postcss-cli": "^10.0.0",
+		"postcss-cli": "^10.0.0",
 		"prettier": "^2.5.1"
 	},
 	"dependencies": {
